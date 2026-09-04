@@ -1,0 +1,105 @@
+# Passive Thermal Shelter Platform
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg
+MANIFEST
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Data (user-generated)
+data/simulations/
+data/reports/
+data/weather/*.json
+data/weather/*.csv
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.next/
+frontend/build/
+frontend/.vite/
+
+# ANSYS files
+*.rst
+*.db
+*.full
+*.emat
+*.esav
+*.mntr
+*.out
+*.stat
+*.err
+*.lock
+*.page*
+*.BCS
+*.ce
+*.cm
+*.apdl
+*.ans
+*.cdb
+*.element
+*.node
+*.r*
+*.s*
+ANSYS_outputs/
+_ProjectScratch/
+ansys_*/
+mapdl_*/
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+
+# Ruff
+.ruff_cache/
+
+# Secrets
+*.pem
+*.key
+secrets.json

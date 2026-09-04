@@ -1,0 +1,8 @@
+{
+  "name": "passive-shelter-platform-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix passive-shelter-thermal-platform/frontend run dev",
+    "build": "npm --prefix passive-shelter-thermal-platform/frontend run build"
+  }
+}

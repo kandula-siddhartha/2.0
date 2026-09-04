@@ -1,0 +1,369 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────
+   DESIGN TOKENS — Clean Modern Dark Theme
+───────────────────────────────────────────────────────── */
+:root {
+  --background:        #0B0F17;
+  --foreground:        #F8FAFC;
+  --card:              #131B2A;
+  --card-foreground:   #F1F5F9;
+  --card-muted:        #1A2438;
+  --muted:             #1A2333;
+  --muted-foreground:  #94A3B8;
+  --border:            #223049;
+  --border-light:      #1A2436;
+  --accent:            #38BDF8;
+  --accent-hover:      #0EA5E9;
+  --success:           #10B981;
+  --warning:           #F59E0B;
+  --danger:            #EF4444;
+}
+
+/* ─────────────────────────────────────────────────────────
+   BASE STYLES
+───────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100%;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0B0F17; }
+::-webkit-scrollbar-thumb { background: #26354D; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3B4E6D; }
+
+/* ─────────────────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+───────────────────────────────────────────────────────── */
+.font-display {
+  font-family: 'Inter', system-ui, sans-serif;
+}
+.font-mono, .mono {
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+/* ─────────────────────────────────────────────────────────
+   CARDS & CONTAINERS
+───────────────────────────────────────────────────────── */
+.mono-card, .glass-card {
+  background: #131B2A;
+  border: 1px solid #223049;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.mono-card-inverted {
+  background: #172235;
+  border: 1px solid #38BDF8;
+  border-radius: 12px;
+  padding: 20px;
+  color: #FFFFFF;
+}
+
+.metric-card {
+  background: #131B2A;
+  border: 1px solid #223049;
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 150ms ease;
+}
+.metric-card:hover {
+  border-color: #38BDF8;
+  background: #162236;
+}
+
+/* ─────────────────────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  border: 1px solid transparent;
+  line-height: 1.25;
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Primary: Crisp Sky Blue */
+.btn-primary {
+  background: #0284C7;
+  color: #FFFFFF;
+  border-color: #0369A1;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #0EA5E9;
+  box-shadow: 0 0 12px rgba(14, 165, 233, 0.35);
+}
+
+/* Secondary: Sleek Dark Slate */
+.btn-secondary {
+  background: #1A2438;
+  color: #E2E8F0;
+  border-color: #2D3E5B;
+}
+.btn-secondary:hover:not(:disabled) {
+  background: #23314B;
+  color: #FFFFFF;
+  border-color: #3E547A;
+}
+
+/* Success: Emerald */
+.btn-success {
+  background: #059669;
+  color: #FFFFFF;
+  border-color: #047857;
+}
+.btn-success:hover:not(:disabled) {
+  background: #10B981;
+}
+
+/* Danger: Crimson/Rose */
+.btn-danger {
+  background: #DC2626;
+  color: #FFFFFF;
+  border-color: #B91C1C;
+}
+.btn-danger:hover:not(:disabled) {
+  background: #EF4444;
+}
+
+/* Outline / Ghost */
+.btn-outline {
+  background: transparent;
+  color: #94A3B8;
+  border-color: #2D3E5B;
+}
+.btn-outline:hover:not(:disabled) {
+  background: #1A2438;
+  color: #F8FAFC;
+  border-color: #475569;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #94A3B8;
+  border: none;
+  padding: 6px 10px;
+}
+.btn-ghost:hover:not(:disabled) {
+  color: #38BDF8;
+}
+
+/* ─────────────────────────────────────────────────────────
+   FORM INPUTS
+───────────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  background: #0D1522;
+  border: 1px solid #26354D;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #F1F5F9;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  outline: none;
+  transition: all 150ms ease;
+}
+.input:focus {
+  border-color: #38BDF8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+.input::placeholder {
+  color: #64748B;
+}
+
+/* Select variant */
+select.input {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+select.input option {
+  background: #0D1522;
+  color: #F1F5F9;
+}
+
+/* Form Label */
+.label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94A3B8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+/* ─────────────────────────────────────────────────────────
+   STATUS BADGES — Clean & Colorful
+───────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 9px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 9999px;
+  line-height: 1.4;
+}
+
+.badge-completed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.badge-solving, .badge-preparing, .badge-running {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.badge-queued {
+  background: rgba(245, 158, 11, 0.15);
+  color: #FBBF24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.badge-failed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.badge-cancelled {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94A3B8;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+/* ─────────────────────────────────────────────────────────
+   NAVIGATION (Sidebar)
+───────────────────────────────────────────────────────── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  color: #94A3B8;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: #162133;
+  color: #F1F5F9;
+}
+.nav-item.active {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+  font-weight: 600;
+  border-left: 3px solid #38BDF8;
+}
+
+/* ─────────────────────────────────────────────────────────
+   DATA TABLE
+───────────────────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th {
+  padding: 10px 14px;
+  background: #162133;
+  color: #94A3B8;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 1px solid #223049;
+}
+.data-table td {
+  padding: 10px 14px;
+  font-size: 13px;
+  border-bottom: 1px solid #1A2436;
+  vertical-align: middle;
+  color: #E2E8F0;
+}
+.data-table tr:hover td {
+  background: #162133;
+}
+.data-table tr.highlighted td {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+}
+
+/* ─────────────────────────────────────────────────────────
+   STEP WIZARD
+───────────────────────────────────────────────────────── */
+.step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: all 150ms ease;
+}
+.step-dot.active {
+  background: #0284C7;
+  color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(2, 132, 199, 0.4);
+}
+.step-dot.done {
+  background: #059669;
+  color: #FFFFFF;
+}
+.step-dot.idle {
+  background: #1A2438;
+  color: #64748B;
+  border: 1px solid #2D3E5B;
+}
+
+/* ─────────────────────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────────────────────── */
+.fade-in {
+  animation: fadeIn 0.2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
