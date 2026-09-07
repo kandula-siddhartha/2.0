@@ -1,4 +1,3 @@
-# Passive Thermal Shelter Platform
 # Python
 __pycache__/
 *.py[cod]
@@ -6,100 +5,69 @@ __pycache__/
 *.so
 .Python
 build/
-dist/
 *.egg-info/
 .eggs/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg
-MANIFEST
 .venv/
 venv/
 env/
 ENV/
-env.bak/
-venv.bak/
 
-# Environment
+# Environment Variables
 .env
 .env.local
 .env.production
+!.env.example
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
+# SQLite Database (Auto-initialized and seeded on first run)
+*.db-journal
 
 # Logs
 logs/
 *.log
 
-# Data (user-generated)
-data/simulations/
-data/reports/
-data/weather/*.json
-data/weather/*.csv
+# Simulation Run Artifacts (Heavy FEA outputs)
+data/simulations/*
+!data/simulations/.gitkeep
+data/reports/*
+!data/reports/.gitkeep
 
-# Frontend
+# Frontend Node Modules & Dev Caches
 frontend/node_modules/
-frontend/dist/
+frontend/.vite/
 frontend/.next/
 frontend/build/
-frontend/.vite/
+# NOTE: frontend/dist/ is intentionally committed so any laptop can run
+# the web app directly without needing Node.js or npm installed.
 
-# ANSYS runtime files
-*.rst
+# ANSYS Simulation Scratch & Large Binary Files
 *.rth
 *.full
 *.emat
 *.esav
 *.mntr
+*.out
 *.stat
+*.err
 *.lock
 *.page*
 *.BCS
 *.ce
 *.cm
-*.apdl
-*.ans
-*.cdb
-*.element
-*.node
-*.r*
-*.s*
+*.dsp
+*.ldhi
+*.r001
 ANSYS_outputs/
 _ProjectScratch/
 ansys_*/
-mapdl_run/
-**/__pycache__/
-*.py[cod]
+mapdl_*/
 
-# IDE
-.vscode/settings.json
+# IDE & Editor
+.vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# OS Metadata
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
-
-# MyPy
-.mypy_cache/
-.dmypy.json
-
-# Ruff
-.ruff_cache/
-
-# Secrets
-*.pem
-*.key
-secrets.json

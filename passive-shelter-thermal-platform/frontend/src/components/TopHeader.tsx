@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { API, AnsysStatus } from '../api'
 import { Server, WifiOff, Zap } from 'lucide-react'
 
@@ -23,49 +24,69 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ wsConnected, onQuickLoadLe
     }
   }
 
+  const isAnsysReady = ansysStatus?.ansys_detected && ansysStatus?.mapdl_exe_exists
+
   return (
-    <header className="h-14 px-6 flex items-center justify-between sticky top-0 z-30 bg-[#0E1624] border-b border-[#1E293B]">
-      {/* Left: Quick-Load (if provided) */}
+    <header className="h-14 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0">
+      {/* Left: active system status */}
+      <div className="flex items-center gap-4 text-xs text-slate-500">
+        <span className="font-semibold text-slate-800 tracking-tight">System Operational</span>
+        <span className="w-1 h-1 rounded-full bg-slate-300" />
+        <span>PyAnsys Transient FEA Core</span>
+        <span className="w-1 h-1 rounded-full bg-slate-300" />
+        <span className="font-mono text-[11px] text-slate-400">gRPC v0.74.1</span>
+      </div>
+
+      {/* Right: Telemetry & Quick Action */}
       <div className="flex items-center gap-3">
         {onQuickLoadLeh && (
           <button
             onClick={onQuickLoadLeh}
-            className="px-2.5 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/25 text-sky-300 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="btn btn-secondary text-xs py-1.5 px-3 flex items-center gap-1.5 cursor-pointer text-zinc-900 border-zinc-300 hover:bg-zinc-100 hover:border-black transition-all"
+            title="Pre-fill Studio with Leh, Ladakh coordinates & -15°C winter climate window"
           >
-            <Zap size={13} className="text-sky-400" />
-            <span>Quick-Load Leh</span>
+            <Zap size={13} className="text-zinc-900" />
+            <span>Load Leh Winter Baseline</span>
           </button>
         )}
-      </div>
 
-      {/* Right: Status indicators */}
-      <div className="flex items-center gap-4">
-        {/* WebSocket status */}
-        <div className="flex items-center gap-2 text-xs font-medium">
+        {/* Telemetry pill */}
+        <div className="flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs">
           {wsConnected ? (
-            <span className="inline-flex items-center gap-1.5 text-emerald-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Live Telemetry
+            <span className="inline-flex items-center gap-1.5 text-slate-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
+              <span className="font-mono text-[11px]">Live WebSocket</span>
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1.5 text-slate-500">
-              <WifiOff size={13} />
-              Offline
+            <span className="inline-flex items-center gap-1.5 text-slate-400">
+              <WifiOff size={12} />
+              <span className="font-mono text-[11px]">Telemetry Offline</span>
             </span>
           )}
         </div>
 
-        <div className="w-[1px] h-4 bg-[#223049]" />
+        <div className="w-[1px] h-4 bg-slate-200" />
 
-        {/* ANSYS solver badge */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#141E30] border border-[#223049] text-xs">
-          <Server size={13} className="text-slate-400" />
-          <span className="text-slate-400">ANSYS:</span>
-          <span className="font-mono font-semibold text-slate-200">
-            {ansysStatus?.ansys_version ? `v${ansysStatus.ansys_version}` : 'v26.1'}
+        {/* Clickable ANSYS solver badge */}
+        <Link
+          to="/settings"
+          className={`flex items-center gap-2 px-3 py-1 rounded-full border text-xs shadow-xs transition-colors cursor-pointer hover:opacity-90 ${
+            isAnsysReady
+              ? 'bg-emerald-50/70 border-emerald-300 text-emerald-900'
+              : 'bg-amber-50/70 border-amber-300 text-amber-900'
+          }`}
+          title="Click to view ANSYS MAPDL Setup & Connection Diagnostics"
+        >
+          <Server size={12} className={isAnsysReady ? 'text-emerald-700' : 'text-amber-700'} />
+          <span className="font-medium">ANSYS MAPDL:</span>
+          <span className="font-mono font-bold">
+            {isAnsysReady ? `v${ansysStatus?.ansys_version}` : 'Not Detected'}
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-        </div>
+          <span className="inline-flex items-center gap-1 text-[10px] font-mono ml-1">
+            <span className={`w-1.5 h-1.5 rounded-full ${isAnsysReady ? 'bg-emerald-600' : 'bg-amber-600 animate-pulse'}`} />
+            {isAnsysReady ? 'Ready' : 'Configure'}
+          </span>
+        </Link>
       </div>
     </header>
   )

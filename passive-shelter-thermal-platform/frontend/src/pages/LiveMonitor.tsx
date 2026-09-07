@@ -96,17 +96,17 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ wsLastMessage }) => {
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6 fade-in">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1A1D24] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E4E7] pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-medium text-white mb-1">
-            <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+          <div className="flex items-center gap-2 text-xs font-medium text-zinc-800 mb-1">
+            <span className="w-2 h-2 rounded-full bg-black animate-pulse"></span>
             Real-Time FEA Execution Telemetry
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Activity className="w-6 h-6 text-white" />
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight flex items-center gap-2.5">
+            <Activity className="w-6 h-6 text-zinc-900" />
             <span>Live ANSYS Solver Monitor</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-zinc-600 mt-1">
             Real-time finite-element transient thermal runs in local ANSYS MAPDL via PyMAPDL gRPC.
           </p>
         </div>
@@ -125,20 +125,20 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ wsLastMessage }) => {
 
       {/* Error State */}
       {error && (
-        <div className="rounded-lg bg-rose-500/15 border border-rose-500/30 p-4 text-xs font-mono flex items-center gap-2 text-rose-300">
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="rounded-lg bg-zinc-50 border border-zinc-200 p-4 text-xs font-mono flex items-center gap-2 text-zinc-800">
+          <AlertCircle className="w-4 h-4 shrink-0 text-zinc-900" />
           <span>{error}</span>
         </div>
       )}
 
       {/* No Config Loaded */}
       {!activeConfigId && (
-        <div className="mono-card p-12 text-center space-y-4 max-w-lg mx-auto my-12">
-          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 mx-auto flex items-center justify-center text-white">
+        <div className="mono-card bg-white p-12 text-center space-y-4 max-w-lg mx-auto my-12 border border-[#E4E4E7] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+          <div className="w-12 h-12 rounded-xl bg-zinc-100 border border-zinc-200 mx-auto flex items-center justify-center text-zinc-900">
             <Cpu className="w-6 h-6" />
           </div>
-          <h2 className="text-lg font-bold text-white">No Active Simulation Config Loaded</h2>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+          <h2 className="text-lg font-bold text-zinc-900">No Active Simulation Config Loaded</h2>
+          <p className="text-xs text-zinc-600 max-w-sm mx-auto leading-relaxed">
             Configure parameters and launch a transient thermal run from the Simulation Studio to track real-time solver execution.
           </p>
           <button
@@ -153,34 +153,34 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ wsLastMessage }) => {
       {activeConfigId && (
         <div className="space-y-5">
           {/* Progress Summary Banner */}
-          <div className="mono-card p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-[#121418] border border-[#20242C]">
+          <div className="mono-card bg-white p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-[#E4E4E7] shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0 text-white">
+              <div className="w-10 h-10 rounded-xl bg-zinc-100 border border-zinc-200 flex items-center justify-center shrink-0 text-zinc-900">
                 <RefreshCw className={`w-5 h-5 ${!allCompleted ? 'animate-spin' : ''}`} />
               </div>
               <div>
-                <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+                <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider block">
                   Batch Execution Status
                 </span>
-                <span className="text-base font-bold text-white">
+                <span className="text-base font-bold text-zinc-900">
                   {allCompleted ? 'Batch Execution Completed' : 'Simulations in Progress on Local ANSYS Kernel'}
                 </span>
-                <span className="text-xs text-slate-400 font-mono block mt-0.5">
+                <span className="text-xs text-zinc-500 font-mono block mt-0.5">
                   Batch ID: {activeConfigId}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-6 text-xs border-t sm:border-t-0 pt-2 sm:pt-0 border-[#20242C] w-full sm:w-auto justify-between sm:justify-end">
+            <div className="flex items-center gap-6 text-xs border-t sm:border-t-0 pt-2 sm:pt-0 border-[#E4E4E7] w-full sm:w-auto justify-between sm:justify-end">
               <div>
-                <span className="text-slate-400 block text-[11px] uppercase tracking-wider">Completed</span>
-                <span className="font-bold text-emerald-400 text-base font-mono">
-                  {jobs.filter(j => j.status === 'COMPLETED').length} <span className="text-slate-500 text-xs font-normal">/</span> {jobs.length}
+                <span className="text-zinc-500 block text-[11px] uppercase tracking-wider">Completed</span>
+                <span className="font-bold text-zinc-900 text-base font-mono">
+                  {jobs.filter(j => j.status === 'COMPLETED').length} <span className="text-zinc-400 text-xs font-normal">/</span> {jobs.length}
                 </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px] uppercase tracking-wider">Active State</span>
-                <span className={`text-xs font-semibold uppercase ${allCompleted ? 'text-emerald-400' : 'text-white animate-pulse'}`}>
+                <span className="text-zinc-500 block text-[11px] uppercase tracking-wider">Active State</span>
+                <span className={`text-xs font-semibold uppercase ${allCompleted ? 'text-zinc-900 font-bold' : 'text-zinc-600 animate-pulse font-bold'}`}>
                   {allCompleted ? 'Finished' : 'Running'}
                 </span>
               </div>
@@ -198,46 +198,46 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ wsLastMessage }) => {
               return (
                 <div
                   key={job.id}
-                  className={`mono-card p-5 space-y-4 transition-all ${
+                  className={`mono-card bg-white p-5 space-y-4 transition-all shadow-[0_1px_3px_rgba(0,0,0,0.05)] ${
                     isRunning
-                      ? 'border-sky-500/40 shadow-lg shadow-sky-500/5'
+                      ? 'border-zinc-400'
                       : isDone
-                      ? 'border-emerald-500/40'
+                      ? 'border-[#E4E4E7]'
                       : isFailed
-                      ? 'border-rose-500/40'
-                      : 'border-[#20242C]'
+                      ? 'border-zinc-400'
+                      : 'border-[#E4E4E7]'
                   }`}
                 >
                   {/* Job Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1A1D24] pb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E4E4E7] pb-3">
                     <div className="flex items-center gap-3">
-                      <span className="w-8 h-8 rounded-lg bg-[#181B21] border border-[#262A34] text-white flex items-center justify-center font-mono font-bold text-xs shrink-0">
+                      <span className="w-8 h-8 rounded-lg bg-zinc-100 border border-zinc-200 text-zinc-900 flex items-center justify-center font-mono font-bold text-xs shrink-0">
                         #{idx + 1}
                       </span>
                       <div>
                         <div className="flex items-center gap-2.5 flex-wrap">
-                          <span className="font-mono font-bold text-sm text-white">{job.sim_id}</span>
+                          <span className="font-mono font-bold text-sm text-zinc-900">{job.sim_id}</span>
                           <span className={`badge ${isDone ? 'badge-completed' : isRunning ? 'badge-solving' : isFailed ? 'badge-failed' : 'badge-queued'}`}>
                             {job.status}
                           </span>
                         </div>
-                        <span className="text-xs text-slate-400 font-mono block mt-0.5">
+                        <span className="text-xs text-zinc-500 font-mono block mt-0.5">
                           Job ID: {job.id}
                         </span>
                       </div>
                     </div>
 
                     {job.progress_message && (
-                      <div className="text-xs text-slate-300 bg-[#0D0F13] border border-[#20242C] rounded-md px-3 py-1.5 max-w-md truncate font-mono">
-                        <span className="text-white mr-1.5">&gt;</span>
+                      <div className="text-xs text-zinc-700 bg-[#F8FAFC] border border-[#E4E4E7] rounded-md px-3 py-1.5 max-w-md truncate font-mono">
+                        <span className="text-zinc-900 mr-1.5">&gt;</span>
                         {job.progress_message}
                       </div>
                     )}
                   </div>
 
-                  {/* Stage Stepper with colorful segments */}
+                  {/* Stage Stepper with monochrome segments */}
                   <div className="space-y-2">
-                    <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                    <div className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
                       Solver Pipeline Progression
                     </div>
                     <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5">
@@ -250,19 +250,19 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ wsLastMessage }) => {
                             <div
                               className={`h-2 rounded-full transition-all ${
                                 isStgActive
-                                  ? 'bg-white animate-pulse shadow-sm shadow-white/30'
+                                  ? 'bg-black animate-pulse shadow-xs shadow-black/20'
                                   : isStgDone
-                                  ? 'bg-emerald-500'
-                                  : 'bg-[#181B21]'
+                                  ? 'bg-zinc-800'
+                                  : 'bg-zinc-200'
                               }`}
                             />
                             <span
                               className={`text-[10px] block truncate font-medium ${
                                 isStgActive
-                                  ? 'text-white font-bold'
+                                  ? 'text-black font-bold'
                                   : isStgDone
-                                  ? 'text-emerald-400'
-                                  : 'text-slate-500'
+                                  ? 'text-zinc-800'
+                                  : 'text-zinc-400'
                               }`}
                             >
                               {stg.label}
@@ -275,8 +275,8 @@ export const LiveMonitor: React.FC<LiveMonitorProps> = ({ wsLastMessage }) => {
 
                   {/* Error display if failed */}
                   {isFailed && job.error_message && (
-                    <div className="rounded-lg bg-rose-500/15 border border-rose-500/30 p-3 text-xs text-rose-300 flex items-start gap-2">
-                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-rose-400" />
+                    <div className="rounded-lg bg-zinc-50 border border-zinc-200 p-3 text-xs text-zinc-800 flex items-start gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-zinc-900" />
                       <span>{job.error_message}</span>
                     </div>
                   )}

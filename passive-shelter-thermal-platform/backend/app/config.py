@@ -37,6 +37,47 @@ class Settings(BaseSettings):
     mapdl_port: int = Field(default=50052, description="gRPC port for PyMAPDL communication")
     mapdl_start_timeout: int = Field(default=120, description="Seconds to wait for MAPDL to start")
 
+    def resolve_ansys_paths(self) -> None:
+        """
+        Verify if configured ANSYS executable exists. If not, auto-detect from
+        PyMAPDL, environment variables, or standard installation drives.
+        """
+        if not self.ansys_mapdl_exe or not Path(self.ansys_mapdl_exe).exists():
+            from .mapdl_integration.version_detection import AnsysVersionDetector
+            detector = AnsysVersionDetector()
+            info = detector.detect()
+            if info and info.mapdl_exe_exists:
+                self.ansys_mapdl_exe = info.mapdl_exe
+                self.ansys_install_path = info.install_path
+                self.ansys_version = info.version_int
+
+    def save_ansys_path(self, candidate_path: str) -> bool:
+        """
+        Validate, activate, and persist a user-specified ANSYS executable or install path.
+        """
+        from .mapdl_integration.version_detection import AnsysVersionDetector
+        detector = AnsysVersionDetector()
+        info = detector.inspect_path(candidate_path)
+        if not info or not info.mapdl_exe_exists:
+            return False
+
+        self.ansys_mapdl_exe = info.mapdl_exe
+        self.ansys_install_path = info.install_path
+        self.ansys_version = info.version_int
+
+        # Persist to .env if possible
+        try:
+            from dotenv import set_key
+            env_file = str(_PROJECT_ROOT / ".env")
+            if Path(env_file).exists():
+                set_key(env_file, "ANSYS_MAPDL_EXE", self.ansys_mapdl_exe)
+                set_key(env_file, "ANSYS_INSTALL_PATH", self.ansys_install_path)
+                set_key(env_file, "ANSYS_VERSION", str(self.ansys_version))
+        except Exception:
+            pass
+
+        return True
+
     # ── Database ──────────────────────────────────────────────────────────────
     database_url: str = Field(
         default=f"sqlite:///{_DB_PATH.as_posix()}",
@@ -87,3 +128,4 @@ class Settings(BaseSettings):
 # Singleton settings instance
 settings = Settings()
 settings.ensure_directories()
+settings.resolve_ansys_paths()

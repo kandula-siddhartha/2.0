@@ -52,9 +52,13 @@ def orientation_factor(surface_orientation: str, solar_azimuth_deg: float = 180.
     """
     orient_map = {
         "south": 1.0,
-        "north": 0.05,   # Very limited direct solar for north-facing in NH
+        "southeast": 0.85,
+        "southwest": 0.85,
         "east": 0.45,    # Morning sun
         "west": 0.45,    # Afternoon sun
+        "northeast": 0.15,
+        "northwest": 0.15,
+        "north": 0.05,   # Very limited direct solar for north-facing in NH
     }
     if isinstance(surface_orientation, str) and surface_orientation.lower() in orient_map:
         return orient_map[surface_orientation.lower()]

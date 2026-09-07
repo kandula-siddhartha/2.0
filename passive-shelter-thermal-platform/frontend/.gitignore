@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+# dist is tracked so target laptops do not require Node.js or npm
 dist-ssr
 *.local
 

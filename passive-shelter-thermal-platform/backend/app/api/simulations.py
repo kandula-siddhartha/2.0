@@ -160,10 +160,24 @@ def list_configs(db: Session = Depends(get_db)):
         jobs = db.query(SimulationJob).filter(SimulationJob.config_id == c.id).all()
         completed = sum(1 for j in jobs if j.status == JobStatus.COMPLETED)
         failed = sum(1 for j in jobs if j.status == JobStatus.FAILED)
+        loc = db.query(Location).filter(Location.id == c.location_id).first() if c.location_id else None
+        loc_name = (loc.display_name or loc.name) if loc else None
+        if not loc_name and c.name:
+            for sep in [" • ", " – ", " - ", " ? "]:
+                if sep in c.name:
+                    loc_name = c.name.split(sep)[0].strip()
+                    break
+
         out.append({
             "id": c.id,
             "name": c.name,
             "created_at": c.created_at.isoformat() if c.created_at else None,
+            "location_name": loc_name or "Leh, Ladakh, India",
+            "latitude": loc.latitude if loc else None,
+            "longitude": loc.longitude if loc else None,
+            "elevation": loc.elevation if loc else None,
+            "simulation_start": c.simulation_start.isoformat() if c.simulation_start else None,
+            "simulation_end": c.simulation_end.isoformat() if c.simulation_end else None,
             "total_jobs": len(jobs),
             "completed_jobs": completed,
             "failed_jobs": failed,
@@ -313,9 +327,27 @@ def generate_recommendation(config_id: str, db: Session = Depends(get_db)):
     # Sort by score descending
     comparison.sort(key=lambda x: x.get("score", 0) or 0, reverse=True)
 
+    loc = db.query(Location).filter(Location.id == config.location_id).first() if config.location_id else None
+    loc_name = (loc.display_name or loc.name) if loc else None
+    if not loc_name and config.name:
+        for sep in [" • ", " – ", " - ", " ? "]:
+            if sep in config.name:
+                loc_name = config.name.split(sep)[0].strip()
+                break
+
     return {
         "recommendation_id": rec.id,
         "session_id": session_id,
+        "config_id": config.id,
+        "config_name": config.name,
+        "location_name": loc_name or "Leh, Ladakh, India",
+        "latitude": loc.latitude if loc else (34.1650 if "leh" in (loc_name or "").lower() else None),
+        "longitude": loc.longitude if loc else (77.5840 if "leh" in (loc_name or "").lower() else None),
+        "elevation": loc.elevation if loc else (3502.0 if "leh" in (loc_name or "").lower() else None),
+        "region": loc.region if loc else "Ladakh",
+        "country": loc.country if loc else "India",
+        "simulation_start": config.simulation_start.isoformat() if config.simulation_start else None,
+        "simulation_end": config.simulation_end.isoformat() if config.simulation_end else None,
         "recommended_job_id": rec_data["recommended_job_id"],
         "recommended_design": rec_job.design.name if rec_job else None,
         "recommended_material": rec_job.material.name if rec_job else None,

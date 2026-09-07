@@ -6,8 +6,21 @@ echo   PyAnsys-Driven Engineering Decision Support Suite
 echo ======================================================================
 echo.
 
-echo Starting Platform Backend and Dashboard on http://localhost:8000 ...
+set PY_EXE=python
+if exist ".venv\Scripts\python.exe" (
+    set PY_EXE=.venv\Scripts\python.exe
+) else if exist "..\.venv\Scripts\python.exe" (
+    set PY_EXE=..\.venv\Scripts\python.exe
+)
+
+echo Starting Unified Platform on http://localhost:8000 ...
 timeout /t 2 >nul
 start "" http://localhost:8000
-python run.py
+%PY_EXE% run.py
+
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [NOTE] If dependencies or environment are missing, run setup_and_run.bat
+    echo.
+)
 pause

@@ -160,6 +160,16 @@ export interface AnsysStatus {
 export interface RecommendationResult {
   recommendation_id: string
   session_id: string
+  config_id?: string
+  config_name?: string
+  location_name?: string
+  latitude?: number
+  longitude?: number
+  elevation?: number
+  region?: string
+  country?: string
+  simulation_start?: string
+  simulation_end?: string
   recommended_job_id: string
   recommended_design?: string
   recommended_material?: string
@@ -241,6 +251,12 @@ export const API = {
     id: string
     name: string
     created_at: string
+    location_name?: string
+    latitude?: number
+    longitude?: number
+    elevation?: number
+    simulation_start?: string
+    simulation_end?: string
     total_jobs: number
     completed_jobs: number
     failed_jobs: number
@@ -262,6 +278,9 @@ export const API = {
   // ANSYS
   ansysStatus: () => api.get<AnsysStatus>('/ansys/status'),
   testConnection: () => api.post<AnsysStatus>('/ansys/test-connection'),
+  autoDetectAnsys: () => api.post<AnsysStatus>('/ansys/auto-detect'),
+  configureAnsys: (data: { exe_path: string; test_now?: boolean }) =>
+    api.post<AnsysStatus>('/ansys/configure', data),
 
   // Reports
   generateReport: (recommendationId: string) =>

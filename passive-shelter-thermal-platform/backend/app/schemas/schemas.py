@@ -324,6 +324,11 @@ class AnsysStatusResponse(BaseModel):
     node_limit: Optional[int] = None
 
 
+class AnsysConfigRequest(BaseModel):
+    exe_path: str = Field(..., description="Path to ansysXXX.exe or root installation directory")
+    test_now: bool = Field(default=True, description="Whether to immediately test live MAPDL gRPC startup")
+
+
 # ─── Report ──────────────────────────────────────────────────────────────────
 
 class ReportRequest(BaseModel):

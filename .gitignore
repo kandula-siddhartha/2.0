@@ -5,7 +5,6 @@ __pycache__/
 *.so
 .Python
 build/
-dist/
 *.egg-info/
 .eggs/
 .venv/
@@ -13,76 +12,60 @@ venv/
 env/
 ENV/
 
-# Environment variables
+# Environment Variables
 .env
 .env.local
-.env.*
+.env.production
+!.env.example
 
-# Databases & local user data
-data/*.db
-data/*.sqlite
-data/*.sqlite3
-data/simulations/
-data/reports/
-data/weather/*.json
-data/weather/*.csv
+# Database & Journals
 *.db-journal
-*.db-wal
-*.db-shm
 
-# Frontend build & dependencies
+# Simulation Run Artifacts
+data/simulations/*
+!data/simulations/.gitkeep
+data/reports/*
+!data/reports/.gitkeep
+passive-shelter-thermal-platform/data/simulations/*
+!passive-shelter-thermal-platform/data/simulations/.gitkeep
+passive-shelter-thermal-platform/data/reports/*
+!passive-shelter-thermal-platform/data/reports/.gitkeep
+
+# Frontend Node Modules & Dev Caches
 node_modules/
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
+passive-shelter-thermal-platform/frontend/node_modules/
+passive-shelter-thermal-platform/frontend/.vite/
+passive-shelter-thermal-platform/frontend/build/
 
-# ANSYS solver runtime outputs
-*.rst
+# ANSYS Simulation Scratch & Large Binary Files
 *.rth
 *.full
 *.emat
 *.esav
 *.mntr
+*.out
 *.stat
+*.err
 *.lock
 *.page*
 *.BCS
 *.ce
 *.cm
-*.apdl
-*.element
-*.node
-*.r0*
-*.r1*
-*.r2*
-*.r3*
-*.r4*
-*.r5*
-*.r6*
-*.r7*
-*.r8*
-*.r9*
+*.dsp
+*.ldhi
+*.r001
 ANSYS_outputs/
 _ProjectScratch/
 ansys_*/
-mapdl_run/
-**/__pycache__/
-*.py[cod]
+mapdl_*/
 
-# Logs
-logs/
-*.log
-
-# IDE & OS
+# IDE & Editor
 .vscode/
 .idea/
-.DS_Store
-Thumbs.db
-desktop.ini
 *.swp
 *.swo
 
-# Testing & Coverage
-.pytest_cache/
-.coverage
-htmlcov/
+# OS Metadata
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -99,32 +99,32 @@ export const MaterialLibrary: React.FC = () => {
   const getCategoryColor = (cat: string) => {
     switch (cat.toLowerCase()) {
       case 'insulation':
-        return 'bg-sky-500/15 text-sky-300 border-sky-500/30'
+        return 'bg-zinc-100 text-zinc-900 border-zinc-300'
       case 'structural':
-        return 'bg-white/10 text-white border-white/20'
+        return 'bg-zinc-900 text-white border-zinc-900'
       case 'thermal_mass':
-        return 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30'
+        return 'bg-zinc-200 text-zinc-800 border-zinc-300'
       case 'glazing':
-        return 'bg-cyan-500/15 text-cyan-400 border-cyan-500/30'
+        return 'bg-black text-white font-semibold border-black'
       default:
-        return 'bg-teal-500/15 text-teal-400 border-teal-500/30'
+        return 'bg-zinc-100 text-zinc-700 border-zinc-300'
     }
   }
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6 fade-in">
       {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1A1D24] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#E4E4E7] pb-5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-medium text-white mb-1">
-            <span className="w-2 h-2 rounded-full bg-white"></span>
+          <div className="flex items-center gap-2 text-xs font-medium text-zinc-800 mb-1">
+            <span className="w-2 h-2 rounded-full bg-black"></span>
             ANSYS MAPDL Calibrated Database
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Layers className="w-6 h-6 text-white" />
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight flex items-center gap-2.5">
+            <Layers className="w-6 h-6 text-black" />
             <span>Building Envelope Material Library</span>
           </h1>
-          <p className="text-sm text-slate-400 mt-1">
+          <p className="text-sm text-zinc-500 mt-1">
             Standard and indigenous Himalayan envelope materials calibrated for transient thermal analysis.
           </p>
         </div>
@@ -148,8 +148,8 @@ export const MaterialLibrary: React.FC = () => {
               onClick={() => setCategory(cat)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
                 category === cat
-                  ? 'bg-white/10 text-white border border-white/30 font-semibold'
-                  : 'bg-[#121418] text-slate-400 hover:text-slate-200 border border-[#20242C]'
+                  ? 'bg-black text-white border border-black font-bold shadow-xs'
+                  : 'bg-white text-zinc-600 hover:text-black border border-zinc-200 hover:bg-zinc-50'
               }`}
             >
               {cat.replace('_', ' ')}
@@ -159,20 +159,20 @@ export const MaterialLibrary: React.FC = () => {
 
         {/* Search */}
         <div className="relative w-full sm:w-64">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Filter materials..."
-            className="input pl-9 text-xs"
+            className="input pl-9 text-xs bg-white border border-zinc-200 text-zinc-900"
           />
         </div>
       </div>
 
       {/* Material Grid */}
       {loading ? (
-        <div className="p-12 text-center text-xs text-slate-400">
+        <div className="p-12 text-center text-xs text-zinc-500">
           Loading material catalog...
         </div>
       ) : (
@@ -180,48 +180,48 @@ export const MaterialLibrary: React.FC = () => {
           {filteredMaterials.map(m => (
             <div
               key={m.id}
-              className="mono-card p-5 space-y-4 flex flex-col justify-between hover:border-slate-600 transition-all"
+              className="mono-card p-5 space-y-4 flex flex-col justify-between hover:border-zinc-400 transition-all bg-[#FFFFFF] border border-[#E4E4E7] shadow-sm"
             >
               <div className="space-y-2">
                 <div className="flex items-start justify-between gap-2">
-                  <span className="font-semibold text-sm text-white">{m.name}</span>
+                  <span className="font-semibold text-sm text-zinc-900">{m.name}</span>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase border ${getCategoryColor(m.category)}`}>
                     {m.category.replace('_', ' ')}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">
+                <p className="text-xs text-zinc-500 leading-relaxed line-clamp-2">
                   {m.description || 'Thermal envelope material.'}
                 </p>
               </div>
 
               {/* Thermal Properties Table */}
-              <div className="rounded-lg bg-[#0D0F13] p-3 border border-[#1A1D24] space-y-2 text-xs font-mono">
-                <div className="flex justify-between items-center text-slate-400 border-b border-[#1A1D24] pb-1.5">
+              <div className="rounded-lg bg-[#F8FAFC] p-3 border border-zinc-200 space-y-2 text-xs font-mono">
+                <div className="flex justify-between items-center text-zinc-600 border-b border-zinc-200 pb-1.5">
                   <span className="text-[11px]">Conductivity (k)</span>
-                  <span className="font-bold text-white">{m.thermal_conductivity} W/m·K</span>
+                  <span className="font-bold text-zinc-900">{m.thermal_conductivity} W/m·K</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-400 border-b border-[#1A1D24] pb-1.5">
+                <div className="flex justify-between items-center text-zinc-600 border-b border-zinc-200 pb-1.5">
                   <span className="text-[11px]">Density (ρ)</span>
-                  <span className="font-bold text-slate-200">{m.density} kg/m³</span>
+                  <span className="font-bold text-zinc-800">{m.density} kg/m³</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-400 border-b border-[#1A1D24] pb-1.5">
+                <div className="flex justify-between items-center text-zinc-600 border-b border-zinc-200 pb-1.5">
                   <span className="text-[11px]">Specific Heat (Cp)</span>
-                  <span className="font-bold text-slate-200">{m.specific_heat} J/kg·K</span>
+                  <span className="font-bold text-zinc-800">{m.specific_heat} J/kg·K</span>
                 </div>
-                <div className="flex justify-between items-center text-slate-400 pt-0.5">
+                <div className="flex justify-between items-center text-zinc-600 pt-0.5">
                   <span className="text-[11px]">Emissivity / Solar α</span>
-                  <span className="font-bold text-white">{m.emissivity ?? 0.9} / {m.solar_absorptivity ?? 0.7}</span>
+                  <span className="font-bold text-zinc-900">{m.emissivity ?? 0.9} / {m.solar_absorptivity ?? 0.7}</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-2 border-t border-[#1A1D24] text-xs">
-                <span className="text-[11px] text-slate-500 font-mono">
+              <div className="flex items-center justify-between pt-2 border-t border-zinc-100 text-xs">
+                <span className="text-[11px] text-zinc-400 font-mono">
                   {m.is_builtin ? 'Built-in material' : 'Custom material'}
                 </span>
                 <div className="flex items-center gap-2.5">
                   <button
                     onClick={() => handleDuplicate(m.id)}
-                    className="text-xs text-slate-400 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
+                    className="text-xs text-zinc-600 hover:text-black flex items-center gap-1.5 cursor-pointer transition-colors"
                   >
                     <Copy size={13} />
                     <span>Duplicate</span>
@@ -229,11 +229,11 @@ export const MaterialLibrary: React.FC = () => {
                   <button
                     onClick={() => handleDelete(m.id, m.name)}
                     disabled={deletingId === m.id}
-                    className="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1 cursor-pointer transition-colors"
+                    className="text-xs text-zinc-600 hover:text-red-600 flex items-center gap-1 cursor-pointer transition-colors"
                     title="Delete material"
                   >
                     {deletingId === m.id ? (
-                      <span className="text-[11px] text-rose-400 animate-pulse">Deleting...</span>
+                      <span className="text-[11px] text-zinc-900 animate-pulse">Deleting...</span>
                     ) : (
                       <>
                         <Trash2 size={13} />
@@ -250,17 +250,17 @@ export const MaterialLibrary: React.FC = () => {
 
       {/* Add Material Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="mono-card max-w-lg w-full p-6 space-y-5 border border-[#262A34] bg-[#121418] shadow-2xl">
-            <div className="flex items-center justify-between border-b border-[#1A1D24] pb-3">
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <Plus size={16} className="text-white" />
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="mono-card max-w-lg w-full p-6 space-y-5 border border-zinc-200 bg-[#FFFFFF] shadow-2xl">
+            <div className="flex items-center justify-between border-b border-zinc-200 pb-3">
+              <h2 className="text-base font-bold text-zinc-900 flex items-center gap-2">
+                <Plus size={16} className="text-black" />
                 <span>Add Thermal Material</span>
               </h2>
               <button
                 type="button"
                 onClick={() => setShowAddModal(false)}
-                className="text-slate-400 hover:text-white"
+                className="text-zinc-400 hover:text-black"
               >
                 <X size={16} />
               </button>
@@ -365,7 +365,7 @@ export const MaterialLibrary: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2.5 pt-3 border-t border-[#1A1D24]">
+              <div className="flex justify-end gap-2.5 pt-3 border-t border-zinc-200">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
