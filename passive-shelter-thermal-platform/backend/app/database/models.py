@@ -277,6 +277,9 @@ class SimulationResult(Base):
     element_count = Column(Integer, nullable=True)
     solve_time_seconds = Column(Float, nullable=True)
 
+    # 3D Thermal Contour & Gradient Field
+    contour_3d = Column(JSON, nullable=True)
+
     created_at = Column(DateTime, default=_now)
 
     job = relationship("SimulationJob", back_populates="result")

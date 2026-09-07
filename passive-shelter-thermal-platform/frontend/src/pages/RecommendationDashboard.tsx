@@ -18,6 +18,8 @@ import {
   Search,
   MapPin,
   Calendar,
+  Box,
+  Compass,
 } from 'lucide-react'
 import Plot from 'react-plotly.js'
 
@@ -83,7 +85,10 @@ export const RecommendationDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [generatingReport, setGeneratingReport] = useState(false)
-  const [activeTab, setActiveTab] = useState<'overview' | 'energy' | 'heatflow' | 'matrix'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'contour3d' | 'energy' | 'heatflow' | 'matrix'>('overview')
+  const [selectedContourJobId, setSelectedContourJobId] = useState<string | null>(null)
+  const [contourMetric, setContourMetric] = useState<'temp' | 'flux'>('temp')
+  const [contourColorscale, setContourColorscale] = useState<'Jet' | 'Turbo' | 'Plasma'>('Jet')
   const [comfortMin, setComfortMin] = useState<number>(18)
   const [comfortMax, setComfortMax] = useState<number>(27)
   const [savedSearch, setSavedSearch] = useState('')
@@ -159,6 +164,7 @@ export const RecommendationDashboard: React.FC = () => {
       if (recData.recommended_job_id) {
         const resultRes = await API.getResult(recData.recommended_job_id)
         setRecResult(resultRes.data)
+        setSelectedContourJobId(recData.recommended_job_id)
       }
       const resultsMap: Record<string, SimulationResult> = {}
       for (const row of recData.comparison_table) {
@@ -290,6 +296,12 @@ export const RecommendationDashboard: React.FC = () => {
   }
 
   const recComfort = calculateComfort(recResult?.temp_internal)
+
+  const activeContourJobId = selectedContourJobId || recommendation?.recommended_job_id
+  const activeContourResult = (activeContourJobId && allResults[activeContourJobId])
+    ? allResults[activeContourJobId]
+    : recResult
+  const contourData = activeContourResult?.contour_3d
 
   return (
     <div className="p-8 max-w-7xl mx-auto space-y-6 fade-in">
@@ -694,6 +706,7 @@ export const RecommendationDashboard: React.FC = () => {
                 <div className="flex items-center gap-1 border-b border-[#E4E4E7] px-4 pt-2 bg-[#FAFAFA] overflow-x-auto">
                   {[
                     { id: 'overview', label: 'Diurnal Curves', icon: TrendingUp },
+                    { id: 'contour3d', label: '3D FEA Contour', icon: Box },
                     { id: 'energy', label: 'Solar Energy', icon: Sun },
                     { id: 'heatflow', label: 'Heat Flow & Loss', icon: Flame },
                     { id: 'matrix', label: 'Comparison Matrix', icon: Layers },
@@ -816,6 +829,318 @@ export const RecommendationDashboard: React.FC = () => {
                           config={{ responsive: true, displayModeBar: true }}
                           style={{ width: '100%' }}
                         />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* TAB: 3D FEA Thermal Contour */}
+                  {activeTab === 'contour3d' && (
+                    <div className="space-y-6 fade-in">
+                      {/* Top Header & Interactive Controls Card */}
+                      <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+                              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                              ANSYS MAPDL Nodal Solution
+                            </span>
+                            <span className="text-xs font-mono text-slate-500">
+                              {contourData?.peak_hour || 'Solar Noon (14:00)'}
+                            </span>
+                          </div>
+                          <h3 className="text-lg font-bold text-slate-900 mt-1">
+                            3D Finite Element Thermal Gradient & Boundary Contour
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-0.5">
+                            Full 3D boundary mesh rendered with directional solar exposure, exterior temperature gradients, and thermal flux leaks.
+                          </p>
+                        </div>
+
+                        {/* Control Switchers */}
+                        <div className="flex flex-wrap items-center gap-2.5">
+                          {/* Configuration Selector */}
+                          {recommendation && recommendation.comparison_table.length > 1 && (
+                            <div className="flex items-center gap-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+                              <span className="text-slate-500 font-medium">Design:</span>
+                              <select
+                                value={activeContourJobId || ''}
+                                onChange={e => setSelectedContourJobId(e.target.value)}
+                                className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer text-xs"
+                              >
+                                {recommendation.comparison_table.map(row => (
+                                  <option key={row.job_id} value={row.job_id}>
+                                    {row.is_recommended ? '★ #1 ' : ''}{row.design_name} • {row.material_name}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          )}
+
+                          {/* Scalar Metric Toggle */}
+                          <div className="inline-flex p-1 rounded-xl bg-slate-100 border border-slate-200">
+                            <button
+                              onClick={() => setContourMetric('temp')}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                                contourMetric === 'temp'
+                                  ? 'bg-white text-slate-900 shadow-xs'
+                                  : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              <ThermometerSnowflake size={13} className="text-blue-600" />
+                              <span>Temperature (°C)</span>
+                            </button>
+                            <button
+                              onClick={() => setContourMetric('flux')}
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                                contourMetric === 'flux'
+                                  ? 'bg-white text-slate-900 shadow-xs'
+                                  : 'text-slate-600 hover:text-slate-900'
+                              }`}
+                            >
+                              <Flame size={13} className="text-amber-600" />
+                              <span>Heat Flux (W/m²)</span>
+                            </button>
+                          </div>
+
+                          {/* Color Palette Selector */}
+                          <div className="flex items-center gap-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5">
+                            <span className="text-slate-500 font-medium">Palette:</span>
+                            <select
+                              value={contourColorscale}
+                              onChange={e => setContourColorscale(e.target.value as any)}
+                              className="bg-transparent font-semibold text-slate-800 focus:outline-none cursor-pointer text-xs"
+                            >
+                              <option value="Jet">Jet (ANSYS Rainbow)</option>
+                              <option value="Turbo">Turbo (High-Contrast)</option>
+                              <option value="Plasma">Plasma (Perceptual)</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Metric Telemetry Cards */}
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                          <span className="text-[11px] text-slate-500 uppercase tracking-wider block font-semibold">
+                            Peak Solar Facade Temp
+                          </span>
+                          <div className="mt-1 flex items-baseline gap-1">
+                            <span className="text-2xl font-extrabold text-red-600">
+                              {contourData?.max_temp !== undefined ? `${contourData.max_temp.toFixed(1)}` : '—'}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium">°C</span>
+                          </div>
+                          <span className="text-[11px] text-slate-400 block mt-0.5">
+                            South wall & roof solar absorption
+                          </span>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                          <span className="text-[11px] text-slate-500 uppercase tracking-wider block font-semibold">
+                            Shadowed North Facade Temp
+                          </span>
+                          <div className="mt-1 flex items-baseline gap-1">
+                            <span className="text-2xl font-extrabold text-blue-600">
+                              {contourData?.min_temp !== undefined ? `${contourData.min_temp.toFixed(1)}` : '—'}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium">°C</span>
+                          </div>
+                          <span className="text-[11px] text-slate-400 block mt-0.5">
+                            Minimum exterior boundary surface
+                          </span>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                          <span className="text-[11px] text-slate-500 uppercase tracking-wider block font-semibold">
+                            Envelope Thermal Gradient (ΔT)
+                          </span>
+                          <div className="mt-1 flex items-baseline gap-1">
+                            <span className="text-2xl font-extrabold text-amber-600">
+                              {contourData?.max_temp !== undefined && contourData?.min_temp !== undefined
+                                ? `${(contourData.max_temp - contourData.min_temp).toFixed(1)}`
+                                : '—'}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium">°C Δ</span>
+                          </div>
+                          <span className="text-[11px] text-slate-400 block mt-0.5">
+                            Solar differential cross-façade
+                          </span>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 shadow-xs">
+                          <span className="text-[11px] text-slate-500 uppercase tracking-wider block font-semibold">
+                            Peak Conductive Flux
+                          </span>
+                          <div className="mt-1 flex items-baseline gap-1">
+                            <span className="text-2xl font-extrabold text-slate-900">
+                              {contourData?.max_flux !== undefined ? `${contourData.max_flux.toFixed(1)}` : '—'}
+                            </span>
+                            <span className="text-xs text-slate-500 font-medium">W/m²</span>
+                          </div>
+                          <span className="text-[11px] text-slate-400 block mt-0.5">
+                            Max heat flux at roof edge corners
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* 3D WebGL Canvas Card */}
+                      <div className="relative rounded-2xl overflow-hidden border border-slate-800 bg-[#090D16] shadow-xl">
+                        {/* Visual HUD Compass & Orientation Tag */}
+                        <div className="absolute top-4 left-4 z-10 flex flex-col gap-2 pointer-events-none">
+                          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/90 border border-slate-700/80 backdrop-blur-md text-white text-xs font-mono">
+                            <Compass size={14} className="text-blue-400" />
+                            <span><b>South</b>: +Y (Sun) | <b>North</b>: -Y (Shade) | <b>Roof</b>: +Z</span>
+                          </div>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-800/80 border border-slate-700/60 text-[11px] font-mono text-slate-300">
+                            <Box size={12} className="text-amber-400" />
+                            <span>FEA Mesh: {contourData?.x ? contourData.x.length : 0} Nodes • {contourData?.i ? contourData.i.length : 0} Triangles</span>
+                          </div>
+                        </div>
+
+                        {/* Orbit & Interaction Hint */}
+                        <div className="absolute bottom-4 left-4 z-10 pointer-events-none">
+                          <span className="text-[11px] font-mono text-slate-400 bg-slate-900/80 px-2.5 py-1 rounded-md border border-slate-800">
+                            🖱 Drag to Orbit / Rotate • Scroll to Zoom • Right-click to Pan
+                          </span>
+                        </div>
+
+                        {/* Plotly 3D Mesh Component */}
+                        {contourData && contourData.x && contourData.x.length > 0 ? (
+                          <Plot
+                            data={[
+                              {
+                                type: 'mesh3d',
+                                x: contourData.x,
+                                y: contourData.y,
+                                z: contourData.z,
+                                i: contourData.i,
+                                j: contourData.j,
+                                k: contourData.k,
+                                intensity: contourMetric === 'temp' ? contourData.temp_c : contourData.flux_wm2,
+                                colorscale: contourColorscale,
+                                showscale: true,
+                                colorbar: {
+                                  title: {
+                                    text: contourMetric === 'temp' ? 'Temperature (°C)' : 'Heat Flux (W/m²)',
+                                    side: 'right',
+                                    font: { color: '#F1F5F9', size: 12, family: 'Inter, sans-serif' },
+                                  },
+                                  tickfont: { color: '#94A3B8', size: 10 },
+                                  thickness: 18,
+                                  len: 0.82,
+                                  outlinewidth: 0,
+                                  x: 0.98,
+                                },
+                                lighting: {
+                                  ambient: 0.8,
+                                  diffuse: 0.85,
+                                  specular: 0.3,
+                                  roughness: 0.4,
+                                  fresnel: 0.2,
+                                },
+                                lightposition: {
+                                  x: 100,
+                                  y: -100,
+                                  z: 200,
+                                },
+                                hovertemplate:
+                                  contourMetric === 'temp'
+                                    ? '<b>X:</b> %{x:.2f} m<br><b>Y:</b> %{y:.2f} m<br><b>Z:</b> %{z:.2f} m<br><b>Surface Temp:</b> %{intensity:.1f} °C<extra></extra>'
+                                    : '<b>X:</b> %{x:.2f} m<br><b>Y:</b> %{y:.2f} m<br><b>Z:</b> %{z:.2f} m<br><b>Heat Flux:</b> %{intensity:.1f} W/m²<extra></extra>',
+                              },
+                            ]}
+                            layout={{
+                              autosize: true,
+                              height: 600,
+                              margin: { l: 0, r: 0, b: 0, t: 20 },
+                              paper_bgcolor: 'transparent',
+                              scene: {
+                                aspectmode: 'data',
+                                xaxis: {
+                                  title: { text: 'Length X (m)', font: { color: '#64748B', size: 11 } },
+                                  tickfont: { color: '#64748B', size: 10 },
+                                  gridcolor: '#1E293B',
+                                  zerolinecolor: '#334155',
+                                  showbackground: true,
+                                  backgroundcolor: '#0B1120',
+                                },
+                                yaxis: {
+                                  title: { text: 'Width Y (m)', font: { color: '#64748B', size: 11 } },
+                                  tickfont: { color: '#64748B', size: 10 },
+                                  gridcolor: '#1E293B',
+                                  zerolinecolor: '#334155',
+                                  showbackground: true,
+                                  backgroundcolor: '#0B1120',
+                                },
+                                zaxis: {
+                                  title: { text: 'Height Z (m)', font: { color: '#64748B', size: 11 } },
+                                  tickfont: { color: '#64748B', size: 10 },
+                                  gridcolor: '#1E293B',
+                                  zerolinecolor: '#334155',
+                                  showbackground: true,
+                                  backgroundcolor: '#0B1120',
+                                },
+                                camera: {
+                                  eye: { x: 1.6, y: -1.8, z: 1.3 },
+                                },
+                              },
+                            }}
+                            config={{
+                              responsive: true,
+                              displayModeBar: true,
+                              displaylogo: false,
+                              modeBarButtonsToRemove: ['toImage', 'resetCameraDefault3d'],
+                            }}
+                            style={{ width: '100%', height: '600px' }}
+                          />
+                        ) : (
+                          <div className="h-[500px] flex flex-col items-center justify-center text-center p-8 text-slate-400">
+                            <Box size={48} className="text-slate-600 mb-3 animate-pulse" />
+                            <p className="text-sm font-semibold text-slate-300">3D Thermal Mesh Data Not Available</p>
+                            <p className="text-xs text-slate-500 max-w-sm mt-1">
+                              Run a simulation with ANSYS MAPDL to generate full 3D boundary nodal surface gradients.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Engineering Physics Interpretation Cards */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0"></div>
+                            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                              South Facade & Roof Solar Capture
+                            </h4>
+                          </div>
+                          <p className="text-xs text-slate-600 leading-relaxed">
+                            At solar noon (14:00), the South facade and high-pitch roof receive maximum direct shortwave solar radiation (up to 850+ W/m²). This creates a warm thermal buffer, mitigating sub-zero ambient chilling and storing latent heat in the envelope.
+                          </p>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0"></div>
+                            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                              North Facade Thermal Gradient
+                            </h4>
+                          </div>
+                          <p className="text-xs text-slate-600 leading-relaxed">
+                            The permanently shadowed North wall experiences purely convective chilling and radiant night-sky sink temperatures. Heavy wall insulation is critical here to suppress conductive exterior heat leakage down to safe thresholds.
+                          </p>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-1.5">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0"></div>
+                            <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                              Corner Thermal Bridges & Flux
+                            </h4>
+                          </div>
+                          <p className="text-xs text-slate-600 leading-relaxed">
+                            Finite element results show elevated heat flux density (W/m²) along geometric 90° corners and eave junctions. These multidimensional heat paths highlight where continuous insulation detailing prevents local condensation and cold spots.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}

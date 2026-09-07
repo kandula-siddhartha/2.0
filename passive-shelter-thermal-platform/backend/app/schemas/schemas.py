@@ -286,6 +286,7 @@ class SimulationResultResponse(BaseModel):
     node_count: Optional[int] = None
     element_count: Optional[int] = None
     solve_time_seconds: Optional[float] = None
+    contour_3d: Optional[Dict[str, Any]] = None
     created_at: datetime
 
     model_config = {"from_attributes": True}

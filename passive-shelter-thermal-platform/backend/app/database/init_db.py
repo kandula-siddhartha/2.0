@@ -300,6 +300,15 @@ def init_db() -> None:
     """Create all tables and seed default data if needed."""
     Base.metadata.create_all(bind=engine)
 
+    # Safe schema evolution for SQLite (adds contour_3d column if missing)
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE simulation_results ADD COLUMN contour_3d JSON"))
+            conn.commit()
+    except Exception:
+        pass  # Column already exists
+
     with get_db_context() as db:
         # Seed materials
         existing_count = db.query(Material).filter(Material.is_builtin == True).count()

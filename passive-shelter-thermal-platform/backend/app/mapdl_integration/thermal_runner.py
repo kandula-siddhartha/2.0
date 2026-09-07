@@ -323,6 +323,31 @@ def run_thermal_simulation(
         results["total_heat_loss_kwh"] = round(total_loss_kwh, 2)
         results["peak_heat_loss_w"] = round(peak_loss_w, 2)
 
+        # ── 3D Thermal Contour Extraction ──────────────────────────────────────
+        try:
+            peak_step = 1
+            if len(results.get("temp_internal_avg", [])) > 0:
+                peak_step = int(np.argmax(results["temp_internal_avg"])) + 1
+
+            geo_info_contour = {
+                "length": geo_info["length"],
+                "width": geo_info["width"],
+                "height": geo_info["height"],
+                "t_min": results.get("scalar_metrics", {}).get("min_internal_temp", -10.0),
+                "t_max": results.get("scalar_metrics", {}).get("max_internal_temp", 26.0),
+                "t_avg": results.get("scalar_metrics", {}).get("avg_internal_temp", 18.0),
+            }
+            results["contour_3d"] = extractor.extract_3d_surface_contour(
+                target_set=peak_step,
+                geo_info=geo_info_contour,
+                orientation=orientation,
+            )
+            logger.info(f"[{job_id}] 3D thermal contour extracted successfully.")
+        except Exception as e:
+            logger.warning(f"[{job_id}] 3D contour extraction skipped: {e}")
+            results["contour_3d"] = None
+
+
         _update("EXTRACTING_RESULTS", f"Simulation solved. Extracted {len(results['times_s'])} time steps.")
         return results
 

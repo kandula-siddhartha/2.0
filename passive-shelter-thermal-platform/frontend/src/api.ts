@@ -114,6 +114,22 @@ export interface SimulationJob {
   completed_at?: string
 }
 
+export interface SimulationResult3DContour {
+  x: number[]
+  y: number[]
+  z: number[]
+  i: number[]
+  j: number[]
+  k: number[]
+  temp_c: number[]
+  flux_wm2: number[]
+  min_temp: number
+  max_temp: number
+  min_flux: number
+  max_flux: number
+  peak_hour?: string
+}
+
 export interface SimulationResult {
   id: string
   job_id: string
@@ -139,6 +155,7 @@ export interface SimulationResult {
   node_count?: number
   element_count?: number
   solve_time_seconds?: number
+  contour_3d?: SimulationResult3DContour
   created_at: string
 }
 

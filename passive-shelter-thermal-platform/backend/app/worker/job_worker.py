@@ -193,6 +193,7 @@ def _run_job(job_id: str) -> None:
                 node_count=mesh_info.get("node_count"),
                 element_count=mesh_info.get("element_count"),
                 solve_time_seconds=results.get("solve_time_s"),
+                contour_3d=results.get("contour_3d"),
             )
             db.add(sim_result)
 
