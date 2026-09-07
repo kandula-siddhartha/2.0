@@ -6,7 +6,7 @@
 ![PyAnsys](https://img.shields.io/badge/PyAnsys-PyMAPDL%20gRPC-FF4B4B?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.116-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/React%2019-Vite%20%2B%20TypeScript-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![License](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)
+
 
 <p align="center">
   <strong>Automated 3D Transient Thermal Finite-Element Analysis, Microclimate Harvesting, and Multi-Criteria Engineering Recommendation for High-Altitude Passive Shelters</strong>
